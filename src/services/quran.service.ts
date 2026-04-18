@@ -1,4 +1,4 @@
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "../db/client.js";
 import { buildMeta, type PaginationMeta } from "../lib/pagination.js";
 import { DEFAULT_EDITION_SLUG } from "../constants/quran.js";
