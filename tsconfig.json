@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
+//    "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "dist",
+//    "outDir": "dist",
     "strict": true,
     "skipLibCheck": true,
     "noEmit": false,
     "esModuleInterop": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "outDir": "./dist",      // MUST be this
+    "rootDir": "./src",      // adjust if needed
+    "module": "commonjs",
+
+
   },
   "include": [
     "src/**/*.ts",
