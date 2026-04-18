@@ -14,16 +14,24 @@ const globalForPrisma = globalThis as unknown as {
  * to the underlying `postgresql://` connection string in that case.
  */
 function resolvePooledConnectionString(): string {
-  const fromEnv = process.env.PG_CONNECTION_URL;
-  if (fromEnv) return fromEnv;
+  const pgUrl = process.env.PG_CONNECTION_URL;
+  const dbUrl = process.env.DATABASE_URL;
 
-  const db = process.env.DATABASE_URL;
-  if (db?.startsWith("postgres://") || db?.startsWith("postgresql://")) {
-    return db;
+  if (pgUrl?.startsWith("postgresql://") || pgUrl?.startsWith("postgres://")) {
+    return pgUrl;
   }
 
+  if (dbUrl?.startsWith("postgresql://") || dbUrl?.startsWith("postgres://")) {
+    return dbUrl;
+  }
+
+  console.error("Connection strings found:", { 
+    DATABASE_URL: dbUrl ? "SET" : "NOT SET", 
+    PG_CONNECTION_URL: pgUrl ? "SET" : "NOT SET" 
+  });
+
   throw new Error(
-    "Set PG_CONNECTION_URL to a postgresql:// URL for pooled connections (required when DATABASE_URL is prisma+postgres://), or use DATABASE_URL with postgresql://"
+    "Set PG_CONNECTION_URL or DATABASE_URL to a valid postgresql:// URL."
   );
 }
 

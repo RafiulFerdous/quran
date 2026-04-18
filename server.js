@@ -1,9 +1,9 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-import { disconnectDb } from "./src/db/client.ts";
-import { errorHandler } from "./src/middleware/errorHandler.ts";
-import { appRouter, quranRouter } from "./src/routes/index.ts";
+import { disconnectDb } from "./src/db/client.js";
+import { errorHandler } from "./src/middleware/errorHandler.js";
+import { appRouter, quranRouter } from "./src/routes/index.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3002;
