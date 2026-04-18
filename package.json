@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tsx server.js",
+    "build": "prisma generate",
     "dev": "nodemon --exec tsx server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "prisma generate",
