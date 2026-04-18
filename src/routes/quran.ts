@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../db/client.js";
 import { buildMeta, parsePagination } from "../lib/pagination.js";
 
