@@ -1,12 +1,12 @@
 {
   "name": "quran_web_application",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/server.ts",
   "type": "module",
   "scripts": {
     "start": "node dist/src/server.js",
     "build": "prisma generate && tsc",
-    "dev": "nodemon --exec tsx server.js",
+    "dev": "nodemon --exec tsx src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
