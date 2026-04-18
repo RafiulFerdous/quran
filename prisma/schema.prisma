@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [pg_trgm]
+}
+
+enum RevelationType {
+  MECCAN
+  MEDINAN
+}
+
+enum SajdahType {
+  NONE
+  RECOMMENDED
+  OBLIGATORY
+}
+
+/// Quran surah (1–114).
+model Surah {
+  id                 Int            @id
+  nameArabic         String
+  nameTransliterated String
+  nameEnglish        String?
+  revelationType     RevelationType
+  ayahCount          Int
+  ayahs              Ayah[]
+}
+
+/// A single verse (ayah). `verseInSurah` is the index within its surah (1-based).
+model Ayah {
+  id               String     @id @default(cuid())
+  surahId          Int
+  verseInSurah     Int
+  textUthmani      String     @db.Text
+  /// Sequential index across the whole Quran (1–6236), if populated.
+  globalVerseIndex Int?       @unique
+
+  pageStart        Int?
+  juzNumber        Int?
+  hizbNumber       Int?
+  sajdahType       SajdahType @default(NONE)
+
+  surah            Surah      @relation(fields: [surahId], references: [id], onDelete: Cascade)
+  translations     AyahTranslation[]
+
+  @@unique([surahId, verseInSurah])
+  @@index([surahId])
+  @@index([pageStart])
+  @@index([juzNumber])
+  @@index([textUthmani(ops: raw("gin_trgm_ops"))], type: Gin)
+}
+
+/// A translation source (e.g. Sahih International, Indonesian Ministry).
+model TranslationEdition {
+  id           String   @id @default(cuid())
+  languageCode String
+  name         String
+  slug         String   @unique
+  isDefault    Boolean  @default(false)
+
+  translations AyahTranslation[]
+}
+
+/// Translated text for one ayah in one edition.
+model AyahTranslation {
+  id        String   @id @default(cuid())
+  editionId String
+  ayahId    String
+  text      String   @db.Text
+
+  edition   TranslationEdition @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  ayah      Ayah               @relation(fields: [ayahId], references: [id], onDelete: Cascade)
+
+  @@unique([editionId, ayahId])
+  @@index([ayahId])
+  @@index([text(ops: raw("gin_trgm_ops"))], type: Gin)
+}
